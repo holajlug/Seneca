@@ -4,5 +4,5 @@ CREATE TABLE seneca.centro_educativo (
 	codigo_centro CHAR(8) NOT NULL UNIQUE,
 	direccion varchar(200) NOT NULL,
 	telefono CHAR(9) NULL,
-	CONSTRAINT centro_educativo_pk PRIMARY KEY (id),
-)
+	CONSTRAINT centro_educativo_pk PRIMARY KEY (id)
+);
