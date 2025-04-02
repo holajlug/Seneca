@@ -128,7 +128,26 @@ where num_criterios = (select max(num_criterios) from CriteriosPorRA);
 
 -- Para el alumno cuyo primer ID es 1 muestra la nota final por cada módulo
 -- profesional
-
+with AlumnoRA as (
+	with AlumnoCriterio as (
+		select a.id idAlumno, a.nombre nombreAlumno, asg.nombre nombreAsignatura, ra.id RA, c.id CR, avg(tac.nota) media_criterios
+		from tarea_del_alumno_por_criterio tac
+			join alumno a on a.id = tac.id_alumno
+			join criterio_evaluacion c on c.id = tac.id_criterio
+			join resultado_aprendizaje ra on ra.id = c.id_ra
+			join asignatura asg on asg.id = ra.id_asignatura
+		group by a.id, c.id, ra.id, asg.id
+	)
+	select idAlumno, nombreAlumno, nombreAsignatura, RA, sum(media_criterios * c.ponderacion) media_ponderada_ra
+    from AlumnoCriterio
+		join criterio_evaluacion c on c.id = AlumnoCriterio.CR
+	group by idAlumno, nombreAsignatura, RA
+)
+select nombreAlumno, nombreAsignatura, round(avg(media_ponderada_ra), 2) media_asignatura
+from AlumnoRA
+where idAlumno = 1
+group by idAlumno, nombreAsignatura
+;
 
 -- Muestra todos los RA suspensos para cada alumno. El listado debe incluir nombre
 -- completo del alumno, nombre del módulo y descripción del RA
@@ -155,7 +174,33 @@ where AlumnoRA.media_ponderada_ra < 5;
 
 -- Muestra el nombre del profesor que tiene la asignatura con mayor número de
 -- suspensos
-
+with AsignaturaSuspensos as(
+	with AlumnoRA as (
+		with AlumnoCriterio as (
+			select a.id idAlumno, a.nombre nombreAlumno, asg.nombre nombreAsignatura, ra.id RA, c.id CR, avg(tac.nota) media_criterios
+			from tarea_del_alumno_por_criterio tac
+				join alumno a on a.id = tac.id_alumno
+				join criterio_evaluacion c on c.id = tac.id_criterio
+				join resultado_aprendizaje ra on ra.id = c.id_ra
+				join asignatura asg on asg.id = ra.id_asignatura
+			group by a.id, c.id, ra.id, asg.id
+		)
+		select idAlumno, nombreAlumno, nombreAsignatura, RA, sum(media_criterios * c.ponderacion) media_ponderada_ra
+		from AlumnoCriterio
+			join criterio_evaluacion c on c.id = AlumnoCriterio.CR
+		group by idAlumno, nombreAsignatura, RA
+	)
+	select nombreAsignatura, count(*) num_suspensos
+	from AlumnoRA
+	where media_ponderada_ra < 5
+	group by nombreAsignatura
+)
+select p.nombre, p.apellidos, AsignaturaSuspensos.*
+from AsignaturaSuspensos
+	join asignatura asg on AsignaturaSuspensos.nombreAsignatura = asg.nombre
+    join profesor p on p.id = asg.id_profesor
+where AsignaturaSuspensos.num_suspensos = (select  max(num_suspensos) from AsignaturaSuspensos)
+;
 
 -- Muestra los alumnos matriculados en el IES Los Alcores
 select a.*, ce.nombre NombreCentro
