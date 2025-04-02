@@ -1,3 +1,5 @@
+-- MGP, JLB
+
 -- Crear la base de datos
 CREATE DATABASE IF NOT EXISTS seneca;
 USE seneca;
@@ -106,7 +108,7 @@ CREATE TABLE se_matricula (
 -- Tabla RESULTADO_APRENDIZAJE
 CREATE TABLE resultado_aprendizaje (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    cod VARCHAR(50) UNIQUE NOT NULL,
+    cod VARCHAR(50) NOT NULL,
     descripcion TEXT ,
     id_asignatura INT NOT NULL,
     FOREIGN KEY (id_asignatura) REFERENCES ASIGNATURA(id)
@@ -116,8 +118,8 @@ CREATE TABLE resultado_aprendizaje (
 CREATE TABLE criterio_evaluacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_ra INT NOT NULL,
-    cod VARCHAR(50) UNIQUE NOT NULL,
-    descripcion TEXT ,
+    cod VARCHAR(50) NOT NULL,
+    descripcion TEXT,
     ponderacion DECIMAL(3,2),
     FOREIGN KEY (id_ra) REFERENCES resultado_aprendizaje(id),
     CHECK (ponderacion between 0 and 1)

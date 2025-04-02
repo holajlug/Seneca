@@ -1,3 +1,5 @@
+-- MGP, JLB
+
 use seneca;
 
 -- 1. CENTRO_EDUCATIVO (1000 registros)
