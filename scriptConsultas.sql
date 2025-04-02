@@ -199,7 +199,7 @@ select p.nombre, p.apellidos, AsignaturaSuspensos.*
 from AsignaturaSuspensos
 	join asignatura asg on AsignaturaSuspensos.nombreAsignatura = asg.nombre
     join profesor p on p.id = asg.id_profesor
-where AsignaturaSuspensos.num_suspensos = (select  max(num_suspensos) from AsignaturaSuspensos)
+where AsignaturaSuspensos.num_suspensos = (select max(num_suspensos) from AsignaturaSuspensos)
 ;
 
 -- Muestra los alumnos matriculados en el IES Los Alcores
