@@ -3,13 +3,14 @@ use seneca;
 
 -- Consultas
 -- Nota media del RA1 de la asignatura “Bases de datos” por cada alumno
-select avg(tac.nota)
+select tac.id_alumno, round(avg(tac.nota), 2) media_bd
 from tarea_del_alumno_por_criterio tac
 	join criterio_evaluacion c on c.id = tac.id_criterio
 	join resultado_aprendizaje ra on ra.id = c.id_ra
     join asignatura a on a.id = ra.id_asignatura
 where ra.cod = "RA1"
-    and a.nombre = 'Bases de Datos';
+    and a.nombre = 'Bases de Datos'
+group by tac.id_alumno;
 
 -- Nombre y apellidos del alumno que ha obtenido mayor nota en cualquier criterio de
 -- evaluación de cualquier módulo profesional (o asignatura)
@@ -21,7 +22,7 @@ order by mayor_nota desc
 limit 1;
 
 -- Nota media de una asignatura cualquiera
-select avg(tac.nota) nota_media
+select ra.id_asignatura, round(avg(tac.nota), 2) nota_media_de_la_asignatura
 from tarea_del_alumno_por_criterio tac
 	join criterio_evaluacion c on c.id = tac.id_criterio
 	join resultado_aprendizaje ra on ra.id = c.id_ra
@@ -45,7 +46,7 @@ with AlumnoRA as (
 		join criterio_evaluacion c on c.id = AlumnoCriterio.CR
 	group by idAlumno, nombreAsignatura, RA
 )
-select idAlumno, nombreAlumno, nombreAsignatura, round(avg(media_ponderada_ra), 2) media_asignatura
+select idAlumno, nombreAlumno, nombreAsignatura, round(avg(media_ponderada_ra), 2) media_expediente
 from AlumnoRA
 group by idAlumno, nombreAsignatura
 ;
@@ -64,6 +65,8 @@ where num_criterios = (select max(num_criterios) from CriteriosPorRA);
 
 -- Para el alumno cuyo primer ID es 1 muestra la nota final por cada módulo
 -- profesional
+-- ATENCIÓN. Si en alguna ejecución no devuelve datos, volver a ejecutar el scriptDML.sql
+-- para que Alumno1 se matricule en más asignaturas
 with AlumnoRA as (
 	with AlumnoCriterio as (
 		select a.id idAlumno, a.nombre nombreAlumno, asg.nombre nombreAsignatura, ra.id RA, c.id CR, avg(tac.nota) media_criterios

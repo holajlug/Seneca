@@ -234,8 +234,8 @@ VALUES ('RA1', 'Comprender los fundamentos de la programación', (SELECT id FROM
 
 -- Insertar criterios de evaluación
 INSERT INTO criterio_evaluacion (descripcion, cod, id_ra) 
-VALUES ('Escribir código limpio y estructurado', 'C1R1', (SELECT id FROM resultado_aprendizaje WHERE id = 1028)),
-       ('Crear bases de datos normalizadas', 'C1R2', (SELECT id FROM resultado_aprendizaje WHERE id = 1029));
+VALUES ('Escribir código limpio y estructurado', 'C1R1', (SELECT id FROM resultado_aprendizaje WHERE id = 1024)),
+       ('Crear bases de datos normalizadas', 'C1R2', (SELECT id FROM resultado_aprendizaje WHERE id = 1025));
 
 -- Insertar tareas
 INSERT INTO tarea (nombre, cod, descripcion)
@@ -249,4 +249,4 @@ VALUES ((SELECT id FROM tarea WHERE nombre = 'Ejercicio de Bucles'),
         (SELECT id FROM alumno WHERE id_escolar = 'A1234'), 4.5),
        ((SELECT id FROM tarea WHERE nombre = 'Diseño de Base de Datos'), 
         (SELECT id FROM criterio_evaluacion WHERE descripcion = 'Crear bases de datos normalizadas'), 
-        (SELECT id FROM alumno WHERE id_escolar = 'A5678'), 9.0);
+        (SELECT id FROM alumno WHERE id_escolar = 'A5678'), 9.1);

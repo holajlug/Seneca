@@ -1,7 +1,8 @@
 -- MGP, JLB
 
 -- Crear la base de datos
-CREATE DATABASE IF NOT EXISTS seneca;
+drop database if exists seneca;
+CREATE DATABASE seneca;
 USE seneca;
 
 -- Tabla CENTRO_EDUCATIVO
